@@ -52,6 +52,12 @@
             </a>
           </li>
           <li>
+            <a href="#" class="nav-link" data-tab="manage-database">
+              <i class="fa-solid fa-database"></i>
+              <span>Manage Database</span>
+            </a>
+          </li>
+          <li>
             <a href="#" class="nav-link" data-tab="ai-assistant">
               <i class="fa-solid fa-robot"></i>
               <span>AI Assistant</span>
@@ -352,7 +358,78 @@
         </div>
       </section>
 
-      <!-- TAB 5: AI ASSISTANT -->
+      <!-- TAB 5: MANAGE DATABASE -->
+      <section id="manage-database" class="tab-content">
+        <div class="alerts-layout">
+          
+          <!-- Column 1: Manage Classes -->
+          <div class="alerts-section glass-panel" style="padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+            <h2 style="margin-bottom: 8px;"><i class="fa-solid fa-graduation-cap"></i> Register New Class</h2>
+            <p class="text-muted" style="margin-bottom: 20px;">Define and add a new class or section to the institution registration list.</p>
+            
+            <form id="form-add-class" class="modern-form">
+              <div class="control-group" style="margin-bottom: 16px;">
+                <label for="class-name-input" style="display: block; margin-bottom: 8px; font-weight: 500;">Class / Section Name</label>
+                <input type="text" id="class-name-input" class="form-control" placeholder="e.g. Class 12-A" required>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fa-solid fa-plus"></i> Register Class
+              </button>
+            </form>
+            <div id="class-form-message" style="margin-top: 12px; font-size: 0.9rem; font-weight: 500; display: none;"></div>
+          </div>
+
+          <!-- Column 2: Enroll New Students -->
+          <div class="alerts-history glass-panel" style="padding: 24px; border-radius: 12px;">
+            <h2 style="margin-bottom: 8px;"><i class="fa-solid fa-user-plus"></i> Enroll New Student</h2>
+            <p class="text-muted" style="margin-bottom: 20px;">Enrolls a new student into the database with emergency parent contact info.</p>
+            
+            <form id="form-add-student" class="modern-form">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div class="control-group">
+                  <label for="student-name-input" style="display: block; margin-bottom: 8px; font-weight: 500;">Full Name</label>
+                  <input type="text" id="student-name-input" class="form-control" placeholder="e.g. Amit Kumar" required>
+                </div>
+                <div class="control-group">
+                  <label for="student-roll-input" style="display: block; margin-bottom: 8px; font-weight: 500;">Roll Number</label>
+                  <input type="text" id="student-roll-input" class="form-control" placeholder="e.g. 10A-1037" required>
+                </div>
+              </div>
+              
+              <div class="control-group" style="margin-bottom: 16px;">
+                <label for="student-class-select" style="display: block; margin-bottom: 8px; font-weight: 500;">Class / Section Assignment</label>
+                <select id="student-class-select" class="form-control" required>
+                  <option value="">-- Select Class --</option>
+                </select>
+              </div>
+
+              <div class="control-group" style="margin-bottom: 16px;">
+                <label for="student-parent-name" style="display: block; margin-bottom: 8px; font-weight: 500;">Parent/Guardian Full Name</label>
+                <input type="text" id="student-parent-name" class="form-control" placeholder="e.g. Suresh Kumar" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div class="control-group">
+                  <label for="student-parent-phone" style="display: block; margin-bottom: 8px; font-weight: 500;">Parent Phone Number</label>
+                  <input type="text" id="student-parent-phone" class="form-control" placeholder="e.g. +91 9876543210" required>
+                </div>
+                <div class="control-group">
+                  <label for="student-parent-email" style="display: block; margin-bottom: 8px; font-weight: 500;">Parent Email Address</label>
+                  <input type="email" id="student-parent-email" class="form-control" placeholder="e.g. suresh.kumar@example.com" required>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success" style="width: 100%;">
+                <i class="fa-solid fa-floppy-disk"></i> Enroll & Save Student
+              </button>
+            </form>
+            <div id="student-form-message" style="margin-top: 12px; font-size: 0.9rem; font-weight: 500; display: none;"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 6: AI ASSISTANT -->
       <section id="ai-assistant" class="tab-content">
         <div class="ai-assistant-container glass-panel">
           <div class="ai-header">

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Presentation - Student Attendance Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: rgba(22, 28, 45, 0.45);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-color: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-glow: rgba(99, 102, 241, 0.15);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-sans);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Slides Container */
+    .deck-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 60px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: scale(0.98);
+      background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    /* Slide Header */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .slide-title-group h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .slide-title-group h2 i {
+      color: var(--primary);
+    }
+
+    .slide-meta {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Slide Content Layouts */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 1.15rem;
+      line-height: 1.6;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* Title Slide Custom Layout */
+    .title-slide-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+    }
+
+    .title-slide-icon {
+      font-size: 5rem;
+      color: var(--primary);
+      margin-bottom: 25px;
+      text-shadow: 0 0 40px var(--primary-glow);
+      animation: pulse 3s infinite alternate;
+    }
+
+    .title-slide-body h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 40%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .title-slide-body h3 {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-bottom: 50px;
+    }
+
+    .title-slide-meta {
+      display: flex;
+      gap: 40px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 30px;
+      width: 80%;
+      justify-content: center;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .meta-item span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+    }
+
+    .meta-item strong {
+      font-size: 1.1rem;
+      color: #fff;
+    }
+
+    /* Bullet List styling */
+    ul.bullets {
+      list-style-type: none;
+    }
+
+    ul.bullets li {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 16px;
+    }
+
+    ul.bullets li::before {
+      content: "\f058";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: var(--primary);
+    }
+
+    ul.bullets li.absent::before {
+      content: "\f057";
+      color: var(--danger);
+    }
+
+    /* Code Block styling */
+    pre {
+      font-family: var(--font-mono);
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    .code-keyword { color: #f43f5e; }
+    .code-string { color: #10b981; }
+    .code-comment { color: #64748b; font-style: italic; }
+    .code-sql { color: #38bdf8; }
+
+    /* Highlights / Timeline Cards */
+    .timeline-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .timeline-icon {
+      background: var(--primary-glow);
+      color: var(--primary);
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* ERD Visual Container */
+    .erd-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .erd-table {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .erd-table-header {
+      background: var(--primary-glow);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 15px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .erd-table-header i {
+      color: var(--primary);
+    }
+
+    .erd-row {
+      padding: 8px 15px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .erd-row:last-child {
+      border-bottom: none;
+    }
+
+    .erd-pk {
+      color: var(--warning);
+      font-weight: bold;
+    }
+
+    .erd-fk {
+      color: #a855f7;
+    }
+
+    .erd-type {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    /* Footer Controls */
+    .deck-footer {
+      height: 60px;
+      background: rgba(15, 23, 42, 0.8);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 10;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .progress-bar-container {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      margin: 0 45px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--success));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .slide-counter {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Keyboard Shortcuts Tips */
+    .shortcuts-badge {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .key-cap {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #fff;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.2)); }
+      100% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.5)); }
+    }
+
+    /* Interactive Side Navigation Drawer */
+    .side-nav-trigger {
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .side-nav-trigger:hover {
+      color: #fff;
+    }
+
+    .nav-drawer {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 320px;
+      height: 100vh;
+      background: rgba(11, 15, 25, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid var(--border-color);
+      z-index: 100;
+      transition: left 0.3s ease;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-drawer.open {
+      left: 0;
+    }
+
+    .nav-drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+
+    .nav-drawer-header h3 {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .nav-drawer-close {
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .nav-drawer-close:hover {
+      color: #fff;
+    }
+
+    .nav-list {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .nav-item {
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: var(--primary-glow);
+      color: #fff;
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Drawer -->
+  <div class="nav-drawer" id="navDrawer">
+    <div class="nav-drawer-header">
+      <h3>Jump to Slide</h3>
+      <span class="nav-drawer-close" id="navCloseBtn"><i class="fa-solid fa-xmark"></i></span>
+    </div>
+    <ul class="nav-list" id="navList">
+      <!-- Generated dynamically -->
+    </ul>
+  </div>
+
+  <!-- Slides Deck Container -->
+  <div class="deck-container">
+
+    <!-- Slide 1: Title -->
+    <div class="slide active" data-title="Title Slide">
+      <div class="title-slide-body">
+        <div class="title-slide-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h1>Student Attendance Management System</h1>
+        <h3>Smart Prototype Reference Implementation</h3>
+        
+        <div class="title-slide-meta">
+          <div class="meta-item">
+            <span>Presenter</span>
+            <strong>K. Shiva Kumar</strong>
+          </div>
+          <div class="meta-item">
+            <span>Project Target</span>
+            <strong>Sri Gowthami Educational Institutions</strong>
+          </div>
+          <div class="meta-item">
+            <span>Date</span>
+            <strong>June 2026</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Journey Recap -->
+    <div class="slide" data-title="Journey Recap">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-route"></i> The Journey Recap</h2>
+        </div>
+        <span class="slide-meta">Slide 02</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="timeline-card glass-card">
+            <div class="timeline-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div>
+              <h4 style="margin-bottom:10px; color:#fff;">Problem Identified</h4>
+              <p style="font-size:0.95rem; color:var(--text-muted);">Manual paper registers, spreadsheets, and WhatsApp tracking scattered records and delayed critical dropout risk identification.</p>
+            </div>
+          </div>
+          <div class="timeline-card glass-card">
+            <div class="timeline-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div>
+              <h4 style="margin-bottom:10px; color:#fff;">Research Conducted</h4>
+              <p style="font-size:0.95rem; color:var(--text-muted);">Mapped institutional workflow paths, defined key alerts thresholds (&lt;75% attendance/3+ consecutive absences), and planned a relational schema.</p>
+            </div>
+          </div>
+          <div class="timeline-card glass-card">
+            <div class="timeline-icon"><i class="fa-solid fa-cubes"></i></div>
+            <div>
+              <h4 style="margin-bottom:10px; color:#fff;">System Designed</h4>
+              <p style="font-size:0.95rem; color:var(--text-muted);">Designed a dark-themed portal linking a Node Express server and SQLite DB with rule-based automated risk warning engines.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Final System Overview -->
+    <div class="slide" data-title="Final System Overview">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-microchip"></i> Final System Overview</h2>
+        </div>
+        <span class="slide-meta">Slide 03</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card">
+          <h3 style="color:#fff; margin-bottom:15px; font-weight:700;">Delivered Modules</h3>
+          <ul class="bullets">
+            <li><strong>Class Attendance Form</strong>: Mark records with status toggles and absence reasons.</li>
+            <li><strong>Class Reports</strong>: Aggregated data metrics with print CSS support (PDF) & CSV downloads.</li>
+            <li><strong>Warning Alerts Engine</strong>: Automated rule checks generating dashboard indicators.</li>
+            <li><strong>Conversational Assistant</strong>: Local NLP processor querying database in plain English.</li>
+            <li><strong>Administrative Manager</strong>: Forms to enroll classes & students in real-time.</li>
+          </ul>
+        </div>
+        <div class="glass-card" style="display:flex; flex-direction:column; justify-content:center; border-left: 4px solid var(--success);">
+          <h4 style="text-transform:uppercase; letter-spacing:0.1em; color:var(--success); margin-bottom:10px; font-size:0.9rem;">Outcome Statement</h4>
+          <p style="font-size:1.8rem; font-weight:800; line-height:1.2; color:#fff; margin-bottom:20px;">
+            A unified, full-stack attendance tracking portal automating risk detection & saving 85% of marking time.
+          </p>
+          <p style="color:var(--text-muted); font-size:0.95rem;">
+            Successfully integrated local data-storage, frontend controls, and analytical querying into one client-server framework.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Demo - Dashboard -->
+    <div class="slide" data-title="Demo: Dashboard Interface">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-tv"></i> Live System: Dashboard Overview</h2>
+        </div>
+        <span class="slide-meta">Slide 04</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <h3 style="color:#fff; margin-bottom:10px;">Primary Dashboard KPIs</h3>
+            <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.95rem;">Consolidated counts loaded dynamically on window startup.</p>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+            <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid var(--border-color)">
+              <div style="color:var(--primary); font-weight:bold; font-size:1.4rem;">36</div>
+              <span style="font-size:0.8rem; color:var(--text-muted);">Seeded Students</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid var(--border-color)">
+              <div style="color:var(--success); font-weight:bold; font-size:1.4rem;">92.4%</div>
+              <span style="font-size:0.8rem; color:var(--text-muted);">Overall Attendance</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid var(--border-color)">
+              <div style="color:var(--warning); font-weight:bold; font-size:1.4rem;">5</div>
+              <span style="font-size:0.8rem; color:var(--text-muted);">At-Risk Students</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid var(--border-color)">
+              <div style="color:var(--danger); font-weight:bold; font-size:1.4rem;">5</div>
+              <span style="font-size:0.8rem; color:var(--text-muted);">Active Alerts Pending</span>
+            </div>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border-color); padding-top:10px;">
+            <i class="fa-solid fa-info-circle"></i> Dashboard also embeds Chart.js widgets for 10-day trends and absence reasons.
+          </p>
+        </div>
+        <div class="glass-card" style="display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.2);">
+          <i class="fa-solid fa-chart-line" style="font-size:8rem; opacity:0.15; position:absolute;"></i>
+          <div style="text-align:center; z-index:1;">
+            <div style="background:var(--primary-glow); color:var(--primary); padding:8px 16px; border-radius:20px; display:inline-block; font-size:0.8rem; font-weight:bold; margin-bottom:15px;">VISUAL TRENDS</div>
+            <h4 style="color:#fff; margin-bottom:10px;">Integrated Analytics</h4>
+            <p style="color:var(--text-muted); font-size:0.95rem; max-width:80%;">Line chart graphs average class rates over time. Pie chart isolates primary absent reasons (e.g. sickness, weather, emergencies).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Demo - Mark Attendance -->
+    <div class="slide" data-title="Demo: Marking Attendance">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-tv"></i> Live System: Marking Attendance</h2>
+        </div>
+        <span class="slide-meta">Slide 05</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card">
+          <h3 style="color:#fff; margin-bottom:15px;">Daily Register marking Flow</h3>
+          <ul class="bullets">
+            <li><strong>Class & Date Selection</strong>: Load real-time class rosters instantly.</li>
+            <li><strong>Adaptive Controls</strong>: Status toggles (Present/Absent) with dynamic styling.</li>
+            <li><strong>Absence Tagging</strong>: Forces reason tagging when "Absent" is clicked to collect data metrics.</li>
+            <li><strong>Quick Fill Actions</strong>: Batch mark "All Present" or "All Absent" to accelerate processing.</li>
+            <li><strong>Real-time Counters</strong>: Track total present/absent calculations live.</li>
+          </ul>
+        </div>
+        <div class="glass-card" style="display:flex; flex-direction:column; justify-content:center; background: rgba(16, 185, 129, 0.05);">
+          <h4 style="color:var(--success); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:10px;">Marking Interface Design</h4>
+          <p style="color:#fff; margin-bottom:15px; font-weight:600;">Centralized marking grid shows student names alongside overall attendance metrics in-line, preventing accidental marking errors.</p>
+          <div style="border-left:2px solid var(--success); padding-left:15px; font-size:0.9rem; color:var(--text-muted);">
+            Marks are committed in a single transaction payload, updating the SQLite repository instantly.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Demo - Reports -->
+    <div class="slide" data-title="Demo: Generating Reports">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-tv"></i> Live System: Reports & Exports</h2>
+        </div>
+        <span class="slide-meta">Slide 06</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card" style="display:flex; flex-direction:column; justify-content:center; background: rgba(99, 102, 241, 0.05);">
+          <h4 style="color:var(--primary); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; margin-bottom:10px;">Reporting Capabilities</h4>
+          <p style="color:#fff; margin-bottom:15px; font-weight:600;">Generate instant overview aggregates showing student total present/absent counts alongside overall rates.</p>
+          <p style="font-size:0.95rem; color:var(--text-muted);">Features visual warning icons on students matching risk parameters (e.g. rate below 75%).</p>
+        </div>
+        <div class="glass-card">
+          <h3 style="color:#fff; margin-bottom:15px;">Export Utilities</h3>
+          <ul class="bullets">
+            <li><strong>Export CSV</strong>: Generates format-compliant comma-separated values containing clean attendance summaries, ready for MS Excel.</li>
+            <li><strong>Print PDF Layout</strong>: Custom `@media print` CSS formats the dashboard workspace, hiding sidebars and headers, and generating clean, clean paper reports.</li>
+            <li><strong>Offline Compilation</strong>: Computed purely client-side using JavaScript, conserving backend database processing limits.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Demo - Alerts -->
+    <div class="slide" data-title="Demo: Early Warning Alerts">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-tv"></i> Live System: Early Warning Alerts</h2>
+        </div>
+        <span class="slide-meta">Slide 07</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card">
+          <h3 style="color:#fff; margin-bottom:15px;">Rule-Based Alerts Engine</h3>
+          <ul class="bullets">
+            <li><strong>Rule 1: Threshold Drop</strong>: Evaluates student cumulative rate and flags if it drops below 75%.</li>
+            <li><strong>Rule 2: Consecutive Absence</strong>: Scans chronological attendance history and raises warning on 3+ consecutive marked absences.</li>
+            <li><strong>Dynamic Badging</strong>: Auto-generates alerts in the background and updates the sidebar dashboard alerts counter badge immediately.</li>
+          </ul>
+        </div>
+        <div class="glass-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <h4 style="color:var(--warning); margin-bottom:10px;"><i class="fa-solid fa-clipboard-check"></i> Interventions Logging</h4>
+            <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">Admins resolving alerts can record follow-up comments (e.g., "Parent notified. Student returning tomorrow").</p>
+          </div>
+          <div style="background:rgba(245,158,11,0.05); padding:15px; border-radius:10px; border:1px solid rgba(245,158,11,0.2); font-size:0.9rem;">
+            <strong>Resolved log</strong> stores resolution history, marked timestamps, and resolutions for administrative auditing.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Demo - Database & AI -->
+    <div class="slide" data-title="Demo: Database Management & AI">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-tv"></i> Live System: Database & AI Assistant</h2>
+        </div>
+        <span class="slide-meta">Slide 08</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card">
+          <h3 style="color:#fff; margin-bottom:12px;"><i class="fa-solid fa-folder-plus"></i> Database Registry</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">Add classes and enroll students dynamically without editing data scripts manually.</p>
+          <ul class="bullets" style="font-size:0.95rem;">
+            <li><strong>Class Creator</strong>: Validates and inserts unique class labels.</li>
+            <li><strong>Student Enroller</strong>: Saves detailed student metadata, including emergency parental contact phone and email fields.</li>
+            <li><strong>Centralized Updates</strong>: Triggers class selector dropdown reloads automatically across the page tabs.</li>
+          </ul>
+        </div>
+        <div class="glass-card" style="background: rgba(99, 102, 241, 0.02);">
+          <h3 style="color:#fff; margin-bottom:12px;"><i class="fa-solid fa-robot"></i> Conversational AI</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:15px;">Local keyword-matching NLP parser executing queries in plain English.</p>
+          <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:10px; font-family:var(--font-mono); font-size:0.8rem; margin-bottom:15px; border:1px solid var(--border-color)">
+            <span style="color:var(--primary); font-weight:bold;">User:</span> Who is at risk of dropping out?<br>
+            <span style="color:var(--success); font-weight:bold;">AI:</span> Found 5 students under 75% attendance...
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted);">
+            <i class="fa-solid fa-shield-halved"></i> Runs completely offline, avoiding cloud latency and hosting costs.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: System Architecture -->
+    <div class="slide" data-title="System Architecture">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-sitemap"></i> System Architecture Diagram</h2>
+        </div>
+        <span class="slide-meta">Slide 09</span>
+      </div>
+      <div class="slide-body" style="justify-content:space-around;">
+        <div style="display:flex; justify-content:space-around; align-items:center; width:100%; position:relative; margin-bottom:20px;">
+          <!-- CLIENT -->
+          <div class="glass-card" style="text-align:center; width:220px; border-top: 3px solid var(--primary);">
+            <i class="fa-solid fa-desktop" style="font-size:2.5rem; color:var(--primary); margin-bottom:10px;"></i>
+            <h4 style="color:#fff; margin-bottom:5px;">Frontend UI (SPA)</h4>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">HTML5 / CSS3 / Vanilla JS</span>
+          </div>
+          
+          <i class="fa-solid fa-arrow-right-long" style="font-size:1.5rem; color:var(--text-muted)"></i>
+          
+          <!-- SERVER -->
+          <div class="glass-card" style="text-align:center; width:220px; border-top: 3px solid var(--success);">
+            <i class="fa-solid fa-server" style="font-size:2.5rem; color:var(--success); margin-bottom:10px;"></i>
+            <h4 style="color:#fff; margin-bottom:5px;">Express Server</h4>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">Node.js / REST APIs</span>
+          </div>
+          
+          <i class="fa-solid fa-arrow-right-long" style="font-size:1.5rem; color:var(--text-muted)"></i>
+          
+          <!-- DATABASE -->
+          <div class="glass-card" style="text-align:center; width:220px; border-top: 3px solid var(--warning);">
+            <i class="fa-solid fa-database" style="font-size:2.5rem; color:var(--warning); margin-bottom:10px;"></i>
+            <h4 style="color:#fff; margin-bottom:5px;">SQLite3 Engine</h4>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono)">attendance.db (Local File)</span>
+          </div>
+        </div>
+        <div class="glass-card" style="font-size:0.95rem; color:var(--text-muted);">
+          <strong>Architectural Design Rationale:</strong> Client decoupling allows the UI to render layout panels instantly while asynchronously fetching calculations from REST endpoints. SQLite is used to maintain zero database hosting overhead, creating a portable application.
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Code Highlights -->
+    <div class="slide" data-title="Code Highlights">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-code"></i> Backend Code Highlights</h2>
+        </div>
+        <span class="slide-meta">Slide 10</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card" style="display:flex; flex-direction:column; justify-content:center;">
+          <h3 style="color:#fff; margin-bottom:15px;">Idempotent Batch Upserts</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">In <code style="font-family:var(--font-mono)">server.js</code>, attendance markings utilize SQLite's native upsert capabilities.</p>
+          <ul class="bullets" style="font-size:0.9rem;">
+            <li>Prevents duplicate entries on consecutive teacher submissions.</li>
+            <li>Enforces atomicity by running statements inside database transaction blocks.</li>
+            <li>Automatically resets absent reason fields if a student status transitions from "Absent" to "Present".</li>
+          </ul>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <pre style="width:100%; font-size:0.75rem; margin:0;"><span class="code-comment">// server.js - Batch marking route</span>
+<span class="code-keyword">await</span> run(
+  <span class="code-string">`INSERT INTO attendance 
+   (student_id, date, status, absent_reason, marked_by, timestamp) 
+   VALUES (?, ?, ?, ?, ?, ?)
+   ON CONFLICT(student_id, date) DO UPDATE SET 
+     status = excluded.status, 
+     absent_reason = excluded.absent_reason,
+     timestamp = excluded.timestamp`</span>,
+  [student_id, date, status, reason, marked_by, timestamp]
+);</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: Database Design -->
+    <div class="slide" data-title="Database Schema Design">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-diagram-project"></i> Relational Database Schema</h2>
+        </div>
+        <span class="slide-meta">Slide 11</span>
+      </div>
+      <div class="slide-body">
+        <div class="erd-container" style="margin-bottom:20px;">
+          <!-- classes -->
+          <div class="erd-table">
+            <div class="erd-table-header"><i class="fa-solid fa-graduation-cap"></i> classes</div>
+            <div class="erd-row"><span class="erd-pk">id</span> <span class="erd-type">INTEGER</span></div>
+            <div class="erd-row"><span>name</span> <span class="erd-type">TEXT (U)</span></div>
+          </div>
+          <!-- students -->
+          <div class="erd-table">
+            <div class="erd-table-header"><i class="fa-solid fa-users"></i> students</div>
+            <div class="erd-row"><span class="erd-pk">id</span> <span class="erd-type">INTEGER</span></div>
+            <div class="erd-row"><span>name</span> <span class="erd-type">TEXT</span></div>
+            <div class="erd-row"><span>roll_number</span> <span class="erd-type">TEXT (U)</span></div>
+            <div class="erd-row"><span class="erd-fk">class_name</span> <span class="erd-type">TEXT</span></div>
+            <div class="erd-row"><span>parent_name</span> <span class="erd-type">TEXT</span></div>
+          </div>
+          <!-- attendance -->
+          <div class="erd-table">
+            <div class="erd-table-header"><i class="fa-solid fa-calendar-days"></i> attendance</div>
+            <div class="erd-row"><span class="erd-pk">id</span> <span class="erd-type">INTEGER</span></div>
+            <div class="erd-row"><span class="erd-fk">student_id</span> <span class="erd-type">INTEGER</span></div>
+            <div class="erd-row"><span>date</span> <span class="erd-type">TEXT</span></div>
+            <div class="erd-row"><span>status</span> <span class="erd-type">TEXT</span></div>
+            <div class="erd-row"><span>absent_reason</span> <span class="erd-type">TEXT</span></div>
+          </div>
+          <!-- alerts -->
+          <div class="erd-table">
+            <div class="erd-table-header"><i class="fa-solid fa-triangle-exclamation"></i> alerts</div>
+            <div class="erd-row"><span class="erd-pk">id</span> <span class="erd-type">INTEGER</span></div>
+            <div class="erd-row"><span class="erd-fk">student_id</span> <span class="erd-type">INTEGER</span></div>
+            <div class="erd-row"><span>alert_type</span> <span class="erd-type">TEXT</span></div>
+            <div class="erd-row"><span>severity</span> <span class="erd-type">TEXT</span></div>
+            <div class="erd-row"><span>status</span> <span class="erd-type">TEXT</span></div>
+          </div>
+        </div>
+        <div class="glass-card" style="font-size:0.95rem; color:var(--text-muted);">
+          <strong>Key Schema Decision:</strong> Defined a composite unique key `UNIQUE(student_id, date)` on the attendance table. This maintains data consistency at the SQL layer, preventing duplicate student records on the same calendar date.
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Challenges & Solutions - Part 1 -->
+    <div class="slide" data-title="Challenges & Solutions: Part 1">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-triangle-exclamation"></i> Technical Challenges & Solutions</h2>
+        </div>
+        <span class="slide-meta">Slide 12</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card" style="border-top:3px solid var(--danger);">
+          <h4 style="color:#fff; margin-bottom:10px;"><i class="fa-solid fa-skull-crossbones"></i> Challenge: Safe Concurrent marking</h4>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">Multiple teachers marking the same class attendance on identical dates could overwrite files or duplicate rows.</p>
+          <div style="background:rgba(239,68,68,0.05); padding:12px; border-radius:8px; border:1px solid rgba(239,68,68,0.1); font-size:0.85rem;">
+            <strong>Risk:</strong> Database corruption, mismatched attendance percentage metrics, and duplicate rows.
+          </div>
+        </div>
+        <div class="glass-card" style="border-top:3px solid var(--success);">
+          <h4 style="color:#fff; margin-bottom:10px;"><i class="fa-solid fa-circle-check"></i> Resolution: Composite Keys & Upserts</h4>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">Enforced composite indices at the database schema layer and implemented idempotency on the API server.</p>
+          <div style="background:rgba(16,185,129,0.05); padding:12px; border-radius:8px; border:1px solid rgba(16,185,129,0.1); font-size:0.85rem;">
+            <strong>Outcome:</strong> SQLite's native `ON CONFLICT` acts as a guard, turning double-marking requests into safe, non-corruptive updates.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: Challenges & Solutions - Part 2 -->
+    <div class="slide" data-title="Challenges & Solutions: Part 2">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-triangle-exclamation"></i> Technical Challenges & Solutions</h2>
+        </div>
+        <span class="slide-meta">Slide 13</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card" style="border-top:3px solid var(--danger);">
+          <h4 style="color:#fff; margin-bottom:10px;"><i class="fa-solid fa-skull-crossbones"></i> Challenge: Cost-Free AI Analysis</h4>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">Integrating remote cloud LLM APIs introduced recurring API billing costs, token limitations, and mandatory web internet connections.</p>
+          <div style="background:rgba(239,68,68,0.05); padding:12px; border-radius:8px; border:1px solid rgba(239,68,68,0.1); font-size:0.85rem;">
+            <strong>Risk:</strong> Unstable response latency, connection dropouts, and hosting charges.
+          </div>
+        </div>
+        <div class="glass-card" style="border-top:3px solid var(--success);">
+          <h4 style="color:#fff; margin-bottom:10px;"><i class="fa-solid fa-circle-check"></i> Resolution: Local NLP SQL Engine</h4>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">Built a localized JavaScript keyword parsing routing engine mapping questions to direct SQLite query filters.</p>
+          <div style="background:rgba(16,185,129,0.05); padding:12px; border-radius:8px; border:1px solid rgba(16,185,129,0.1); font-size:0.85rem;">
+            <strong>Outcome:</strong> Fast, 100% offline analysis of database dropouts and admissions FAQs with zero API costs.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14: Testing & Validation -->
+    <div class="slide" data-title="Testing & Validation Results">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-clipboard-check"></i> Testing & Validation Suite</h2>
+        </div>
+        <span class="slide-meta">Slide 14</span>
+      </div>
+      <div class="slide-body grid-2">
+        <div class="glass-card">
+          <h3 style="color:#fff; margin-bottom:15px;">Integration test suite</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:15px;">Created a custom test pipeline executing isolated endpoint assertions.</p>
+          <ul class="bullets" style="font-size:0.9rem;">
+            <li><strong>Seeding integrity</strong>: Confirmed database populated exactly 36 students and 540 initial records.</li>
+            <li><strong>Mock server</strong>: Starts a temporary express app on port 3002 to prevent production database locking.</li>
+            <li><strong>Route validation</strong>: Query checks on REST routes (`/api/classes`, `/api/students`, etc.) verifying payload properties.</li>
+          </ul>
+        </div>
+        <div style="display:flex; flex-direction:column; justify-content:center;">
+          <div style="background:rgba(16,185,129,0.05); padding:20px; border-radius:12px; border:1px solid rgba(16,185,129,0.2);">
+            <div style="display:flex; align-items:center; gap:10px; color:var(--success); font-weight:bold; margin-bottom:12px; font-size:1.1rem;">
+              <i class="fa-solid fa-circle-check"></i> Verification logs output
+            </div>
+            <pre style="font-size:0.7rem; padding:12px; background:#05070d; border:none; margin:0;"><span class="code-comment">--- Starting Verification Tests ---</span>
+[Test 1] Verifying database seeding...
+- Students count in DB: 36 (Expected: 36)
+- Classes found: Class 10-A, Class 10-B, Class 11-A
+✓ Database verification passed.
+[Test 2] Starting temporary express server...
+- Testing GET /api/classes...
+- Testing GET /api/students...
+✓ All endpoint verifications passed successfully!</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 15: Learnings & Future Scope -->
+    <div class="slide" data-title="Learnings & Future Scope">
+      <div class="slide-header">
+        <div class="slide-title-group">
+          <h2><i class="fa-solid fa-lightbulb"></i> Learnings, Limitations & Future Scope</h2>
+        </div>
+        <span class="slide-meta">Slide 15</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="glass-card">
+            <h4 style="color:#fff; margin-bottom:12px;"><i class="fa-solid fa-book-open"></i> Key Learnings</h4>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5;">Gained hands-on experience in SQLite schema design, SQL transactions, asynchronous Express API development, and print CSS styling layouts.</p>
+          </div>
+          <div class="glass-card">
+            <h4 style="color:var(--danger); margin-bottom:12px;"><i class="fa-solid fa-circle-exclamation"></i> Current Limitations</h4>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5;">SQLite operates on a local file, restricting concurrent writes across servers. The prototype currently lacks role-based user login access checks.</p>
+          </div>
+          <div class="glass-card">
+            <h4 style="color:var(--success); margin-bottom:12px;"><i class="fa-solid fa-forward"></i> Future Scope</h4>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5;">Migrate to PostgreSQL for cloud deployment, add JWT token-based session auth, and hook SMS/WhatsApp gateway APIs for instant parent notifications.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 16: Closing & QA -->
+    <div class="slide" data-title="Closing Slide">
+      <div class="title-slide-body">
+        <div style="font-size: 3rem; color: var(--success); margin-bottom: 20px;">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h1>Thank You</h1>
+        <h3 style="margin-bottom:40px;">Questions & Answers Session</h3>
+        
+        <div class="glass-card" style="width: 70%; text-align: left; padding: 20px 30px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.95rem;">
+            <div>
+              <div style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Presenter</div>
+              <strong style="color:#fff; font-size:1.1rem;">K. Shiva Kumar</strong>
+            </div>
+            <div>
+              <div style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase;">Repository</div>
+              <a href="https://github.com/koukuntlashiva333-droid/student_attendance_system.git" target="_blank" style="color:var(--primary); text-decoration:none; font-weight:600;">student_attendance_system</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Slide Deck Controls Footer -->
+  <div class="deck-footer">
+    <div class="controls-group">
+      <span class="side-nav-trigger" id="drawerTrigger" title="Slide Index"><i class="fa-solid fa-bars"></i></span>
+      <button class="control-btn" id="prevBtn" disabled><i class="fa-solid fa-arrow-left"></i> Previous</button>
+    </div>
+    
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="controls-group">
+      <button class="control-btn" id="nextBtn">Next <i class="fa-solid fa-arrow-right"></i></button>
+      <span class="slide-counter"><span id="currentSlideNum">1</span> / 16</span>
+      
+      <div class="shortcuts-badge">
+        <span class="key-cap">←</span>
+        <span class="key-cap">→</span>
+        <span style="font-size:0.75rem;">keys</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+
+    // DOM Elements
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const currentSlideNum = document.getElementById('currentSlideNum');
+    const progressFill = document.getElementById('progressFill');
+    const drawerTrigger = document.getElementById('drawerTrigger');
+    const navDrawer = document.getElementById('navDrawer');
+    const navCloseBtn = document.getElementById('navCloseBtn');
+    const navList = document.getElementById('navList');
+
+    // Initialize side navigation jumps
+    slides.forEach((slide, idx) => {
+      const title = slide.getAttribute('data-title') || `Slide ${idx + 1}`;
+      const li = document.createElement('li');
+      li.className = `nav-item ${idx === 0 ? 'active' : ''}`;
+      li.textContent = `${String(idx + 1).padStart(2, '0')}. ${title}`;
+      li.addEventListener('click', () => {
+        goToSlide(idx);
+        toggleDrawer(false);
+      });
+      navList.appendChild(li);
+    });
+
+    // Update slides states
+    function updateSlideState() {
+      slides.forEach((slide, idx) => {
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update footer controls
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+      currentSlideNum.textContent = currentSlide + 1;
+      
+      // Update progress bar
+      const progressPercent = (currentSlide / (totalSlides - 1)) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+
+      // Update Nav List highlighting
+      const navItems = navList.querySelectorAll('.nav-item');
+      navItems.forEach((item, idx) => {
+        if (idx === currentSlide) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    // Navigation triggers
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlideState();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlideState();
+      }
+    }
+
+    function goToSlide(idx) {
+      if (idx >= 0 && idx < totalSlides) {
+        currentSlide = idx;
+        updateSlideState();
+      }
+    }
+
+    function toggleDrawer(forceState) {
+      if (typeof forceState === 'boolean') {
+        navDrawer.classList.toggle('open', forceState);
+      } else {
+        navDrawer.classList.toggle('open');
+      }
+    }
+
+    // Event listeners
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+    drawerTrigger.addEventListener('click', () => toggleDrawer(true));
+    navCloseBtn.addEventListener('click', () => toggleDrawer(false));
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Escape') {
+        toggleDrawer(false);
+      }
+    });
+
+    // Close drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navDrawer.contains(e.target) && e.target !== drawerTrigger && !drawerTrigger.contains(e.target)) {
+        toggleDrawer(false);
+      }
+    });
+
+    // Initial render
+    updateSlideState();
+  </script>
+</body>
+</html>

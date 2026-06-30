@@ -1,5 +1,5 @@
-// API Endpoints Base URL - auto-fallbacks to local backend if served separately
-const BASE_URL = window.location.port === '3000' ? '' : 'http://localhost:3000';
+// API Endpoints Base URL
+const BASE_URL = '';
 
 // UI State
 let activeTab = 'dashboard';
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadClasses();
   loadDashboardData();
   initAiAssistant();
+  initManageDatabase();
   
   // Set default date in mark attendance to today
   const dateInput = document.getElementById('attendance-date-select');
@@ -92,6 +93,9 @@ function switchTab(tabId) {
     pageTitle.textContent = 'Early Warning Alerts';
     pageSubtitle.textContent = 'Identify high-risk students and document academic/parent interventions.';
     loadAlertsData();
+  } else if (tabId === 'manage-database') {
+    pageTitle.textContent = 'Manage Database';
+    pageSubtitle.textContent = 'Register new classes or enroll new students to the institutional registry.';
   } else if (tabId === 'ai-assistant') {
     pageTitle.textContent = 'AI Counselling Assistant';
     pageSubtitle.textContent = 'Analyze attendance patterns and lookup school guidelines with AI.';
@@ -108,20 +112,28 @@ async function loadClasses() {
       
       const attSelect = document.getElementById('attendance-class-select');
       const repSelect = document.getElementById('report-class-select');
+      const studSelect = document.getElementById('student-class-select');
       
       attSelect.innerHTML = '<option value="">-- Choose Class --</option>';
       repSelect.innerHTML = '<option value="">-- Choose Class --</option>';
+      if (studSelect) {
+        studSelect.innerHTML = '<option value="">-- Select Class --</option>';
+      }
 
       classes.forEach(c => {
         const opt = `<option value="${c}">${c}</option>`;
         attSelect.innerHTML += opt;
         repSelect.innerHTML += opt;
+        if (studSelect) {
+          studSelect.innerHTML += opt;
+        }
       });
     }
   } catch (err) {
     console.error('Failed to load classes', err);
   }
 }
+
 
 // Fetch & Render Dashboard Data
 async function loadDashboardData() {
@@ -806,3 +818,104 @@ function initAiAssistant() {
     chatMessages.appendChild(msg);
   }
 }
+
+// Manage Database logic
+function initManageDatabase() {
+  const formAddClass = document.getElementById('form-add-class');
+  const formAddStudent = document.getElementById('form-add-student');
+  const classMessage = document.getElementById('class-form-message');
+  const studentMessage = document.getElementById('student-form-message');
+
+  if (formAddClass) {
+    formAddClass.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('class-name-input');
+      const name = input.value.trim();
+      
+      if (!name) return;
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/classes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          classMessage.style.color = '#2ec4b6';
+          classMessage.textContent = '✓ Class registered successfully!';
+          classMessage.style.display = 'block';
+          input.value = '';
+          await loadClasses(); // Reload all dropdowns
+        } else {
+          classMessage.style.color = '#e71d36';
+          classMessage.textContent = `✗ Error: ${data.error}`;
+          classMessage.style.display = 'block';
+        }
+      } catch (err) {
+        classMessage.style.color = '#e71d36';
+        classMessage.textContent = `✗ Network Error: ${err.message}`;
+        classMessage.style.display = 'block';
+      }
+
+      setTimeout(() => {
+        classMessage.style.display = 'none';
+      }, 5000);
+    });
+  }
+
+  if (formAddStudent) {
+    formAddStudent.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('student-name-input').value.trim();
+      const roll = document.getElementById('student-roll-input').value.trim();
+      const className = document.getElementById('student-class-select').value;
+      const parentName = document.getElementById('student-parent-name').value.trim();
+      const parentPhone = document.getElementById('student-parent-phone').value.trim();
+      const parentEmail = document.getElementById('student-parent-email').value.trim();
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/students`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            roll_number: roll,
+            class_name: className,
+            parent_name: parentName,
+            parent_phone: parentPhone,
+            parent_email: parentEmail
+          })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          studentMessage.style.color = '#2ec4b6';
+          studentMessage.textContent = '✓ Student enrolled successfully!';
+          studentMessage.style.display = 'block';
+          
+          formAddStudent.reset();
+          loadDashboardData(); // Update total student count
+        } else {
+          studentMessage.style.color = '#e71d36';
+          studentMessage.textContent = `✗ Error: ${data.error}`;
+          studentMessage.style.display = 'block';
+        }
+      } catch (err) {
+        studentMessage.style.color = '#e71d36';
+        studentMessage.textContent = `✗ Network Error: ${err.message}`;
+        studentMessage.style.display = 'block';
+      }
+
+      setTimeout(() => {
+        studentMessage.style.display = 'none';
+      }, 5000);
+    });
+  }
+}
+
