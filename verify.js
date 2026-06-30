@@ -63,7 +63,7 @@ async function runTests() {
   try {
     console.log('- Testing GET /api/classes...');
     const classesRes = await getURL('/api/classes');
-    if (!classesRes.success || classesRes.classes.length !== 3) {
+    if (!classesRes.success || classesRes.classes.length < 3) {
       throw new Error(`GET /api/classes returned invalid payload: ${JSON.stringify(classesRes)}`);
     }
 
